@@ -1,0 +1,9 @@
+{
+    "connection":{
+        "server" : "localhost",
+        "user" : "root",
+        "password" : "",
+        "database" : "weird_database",
+        "port" : "3306"
+    }
+}

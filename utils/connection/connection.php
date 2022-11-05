@@ -19,10 +19,10 @@ class connection {
         }
         $this->connection = new mysqli($this->server, $this->user, $this->password, $this->database, $this->port);
         if($this->connection->connect_error){
-            echo "Nooo papuuuu";
+            echo "Error de conexión en la base de datos";
             die();
         } else {
-            echo "Oki doki";
+            echo "Base de datos conectada correctamente";
         }
     }
     private function dataConnection(){

@@ -18,10 +18,9 @@
                 $data = $this->getUserData($user);
                 if($data){
                     //Si existe el usuario
-                    echo "\n yes";
+                    
                 } else {
                     //Si no existe
-                    
                     return $_responses->error_200("No existe el usuario $user");
                 }
             }

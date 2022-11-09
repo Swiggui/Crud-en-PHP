@@ -69,6 +69,12 @@ class connection {
             return 0;
         }
     }
+
+
+    //Encriptar
+    protected function crypto($str){
+        return sha1($str);
+    }
 }
 
 

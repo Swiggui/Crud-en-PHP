@@ -10,6 +10,7 @@
             $_responses = new responses;
             $data = json_decode($json, true);
             if(!isset($data['user']) || !isset($data['password'])){
+                echo "nel";
                 return $_responses->error_400();
             } else {
                 $user = $data['user'];
@@ -17,16 +18,17 @@
                 $data = $this->getUserData($user);
                 if($data){
                     //Si existe el usuario
-                    echo "yes";
+                    echo "\n yes";
                 } else {
                     //Si no existe
-                    echo "\n no";
+                    
                     return $_responses->error_200("No existe el usuario $user");
                 }
             }
         }
         private function getUserData($user){
-            $query = "SELECT id_usuario, contraseña FROM tb_usuarios WHERE usuario = '$user'";
+            $query = "SELECT id_usuario, contrasena FROM tb_usuarios WHERE usuario = '$user';";
+            
             $data = parent::obtainData($query);
             if(isset($data[0]["id_usuario"])){
                 return $data;

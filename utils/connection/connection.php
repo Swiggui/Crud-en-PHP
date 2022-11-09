@@ -42,9 +42,11 @@ class connection {
     }
 
     public function obtainData($sqlstr){
+        
         $results = $this->connection->query($sqlstr);
+        
         $resultsArray = array();
-        foreach($resultsArray as $key){
+        foreach($results as $key){
             $resultsArray[] = $key;
         }
         return $this->convertUTF8($resultsArray);

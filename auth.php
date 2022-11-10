@@ -17,17 +17,20 @@
 
 
         //delvolvemos una respuesta
-        header('Content-Type: application/json');
-        if(isset($datosArray["result"]["error_id"])){
-            $responseCode = $dataArray["result"]["error_id"];
-            http_response_code($responseCode);
+        header('Content-Type: application/json');//Indica el tipo de respuesta
+        if(isset($datosArray["result"]["error_id"])){ //Verifica si existe en dataArray un subArray llamado result y hay un error id
+            $responseCode = $dataArray["result"]["error_id"]; //Crea la variable con el error
+            http_response_code($responseCode); 
         }else{
-            http_response_code(200);   
+            http_response_code(200);   //Retorna un status 200 indicando que fué exitoso
         }
-        echo json_encode($dataArray);        
+        
         
     } else {
-        echo "No";
+        header('Content-Type: application/json');
+        $dataArray = $_responses->error_405();
+        
     }
 
+    echo json_encode($dataArray);//Con json_encode el array se convierte en un string y permite con el echo imprimir el array mientras que print_r es más para depurar
 ?>

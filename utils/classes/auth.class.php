@@ -5,10 +5,13 @@
 
     class auth extends connection{
 
+        
+        
         public function login($json){
 
             $_responses = new responses;
-            $data = json_decode($json, true);
+            $data = json_decode($json, true);   
+            
             if(!isset($data['user']) || !isset($data['password'])){
                 return $_responses->error_400();
             } else {
@@ -20,19 +23,7 @@
                     $password = parent::crypto($password);
                     if($password == $data[0]["contrasena"]){
                         //Crea el token
-                        $verify = $this->insertToken($data[0]["id_usuario"]);
-                        if($verify){
-                            //Si se guardó el token
-
-                            $result = $_responses->response;
-                            $result['result'] = array(
-                                "token" => $verify
-                            );
-                            return $result;
-                        } else{
-                            //Si no se guardó el token
-                            return $_responses->error_500("Error interno, no se ha podido guardar");
-                        }
+                        return $this->generateToken($data, $_responses);
                     } else {
                         return $_responses->error_200("La contraseña es inválida, intentelo de nuevo");
                     }
@@ -66,6 +57,22 @@
                 return $token;
             } else {
                 return 0;
+            }
+        }
+
+        private function generateToken($data, $_responses){
+            $verify = $this->insertToken($data[0]["id_usuario"]);
+            if($verify){
+                //Si se guardó el token
+            
+                $result = $_responses->response;
+                $result['result'] = array(
+                    "token" => $verify
+                );
+                return $result;
+            } else{
+                //Si no se guardó el token
+                return $_responses->error_500("Error interno, no se ha podido guardar");
             }
         }
 

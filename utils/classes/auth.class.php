@@ -20,13 +20,7 @@
                 $data = $this->getUserData($user);
                 if($data){
                     //Si existe el usuario
-                    $password = parent::crypto($password);
-                    if($password == $data[0]["contrasena"]){
-                        //Crea el token
-                        return $this->generateToken($data, $_responses);
-                    } else {
-                        return $_responses->error_200("La contraseña es inválida, intentelo de nuevo");
-                    }
+                    return $this->checkPassword($data, $password, $_responses);
                 } else {
                     //Si no existe
                     return $_responses->error_200("No existe el usuario $user");
@@ -73,6 +67,16 @@
             } else{
                 //Si no se guardó el token
                 return $_responses->error_500("Error interno, no se ha podido guardar");
+            }
+        }
+
+        private function checkPassword($data, $password, $_responses){
+            $password = parent::crypto($password);
+            if($password == $data[0]["contrasena"]){
+                //Crea el token
+                return $this->generateToken($data, $_responses);
+            } else {
+                return $_responses->error_200("La contraseña es inválida, intentelo de nuevo");
             }
         }
 

@@ -29,8 +29,16 @@
         //Recibe los datos enviados
         $postbody = file_get_contents("php://input");
         //Se envía al controlador
+        $resp = $_users->post($postbody);
+        //Se devuelve la respuesta
+        header('Content-Type: application/json');//Indica el tipo de respuesta
+        if(isset($resp["result"]["error_id"])){ //Verifica si existe en dataArray un subArray llamado result y hay un error id
+            $responseCode = $resp["result"]["error_id"]; //Crea la variable con el error
+            http_response_code($responseCode); 
+        }else{
+            http_response_code(200);   //Retorna un status 200 indicando que fué exitoso
+        }
         
-        http_response_code(200);
     } else if($_SERVER['REQUEST_METHOD'] == 'PUT'){
         echo "putting data";
         http_response_code(200);

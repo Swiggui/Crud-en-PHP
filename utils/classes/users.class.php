@@ -61,10 +61,51 @@
             }
         }
 
+        public function put($json){
+            $_responses = new responses;
+            $data = json_decode( $json, true);
+            if(!isset($data['userID'])){
+                return $_responses->error_400();
+            } else {
+                $this->userID = $data['userID'];
+                if(isset($data['name'])){ $this->name = $data['name']; }
+                if(isset($data['lastname'])){ $this->lastname = $data['lastname']; }
+                if(isset($data['user'])){ $this->user = $data['user']; }
+                if(isset($data['password'])){ $this->password = parent::crypto($data['password']); }
+                if(isset($data['role'])){ $this->role = $data['role']; }
+                if(isset($data['email'])){ $this->email = $data['email']; }
+                if(isset($data['phone'])){ $this->phone = $data['phone']; }
+                try {
+                    $resp = $this->modifyUser();
+                    //$answer = $_responses->response;
+                    //$answer["result"] = array(
+                    //    "userId" => $resp
+                    //);
+                    //return $answer;
+                } catch (mysqli_sql_exception $e) {
+                    return $_responses->error_500();
+                }
+            }
+        }
+
         private function insertUser(){
             $query = "INSERT INTO " . $this->table . "(nombre, apellido, usuario, contrasena, rol, correo, nro_cel) 
             VALUES 
             ('" . $this->name . "', '" . $this->lastname . "', '" . $this->user . "', '" . $this->password . "', '" . $this->role . "', '" . $this->email . "', '" . $this->phone . "');";
+
+            $resp = parent::nonQueryId($query);
+            if($resp){
+                return $resp;
+            } else {
+                return 0;
+            }
+        }
+
+        
+        private function modifyUser(){
+            $query = "UPDATE " . $this->table . " SET nombre = '" . $this->name . "', apellido = '" . $this->lastname . "', usuario = '" . $this->user . "', contrasena = '" . $this->password . "', rol = '" . $this->role . "', correo = '" . $this->email . "', nro_cel = '" . $this->phone . "' WHERE id_usuario = '" . $this->userID . "'"; 
+            echo "\n";
+            print_r($query);
 
             $resp = parent::nonQueryId($query);
             if($resp){

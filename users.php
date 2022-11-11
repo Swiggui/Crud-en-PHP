@@ -40,8 +40,12 @@
         }
         
     } else if($_SERVER['REQUEST_METHOD'] == 'PUT'){
-        echo "putting data";
-        http_response_code(200);
+        
+        $postbody = file_get_contents("php://input");
+
+        $dataArray = $_users->put($postbody);
+        
+        
     } else if($_SERVER['REQUEST_METHOD'] == 'DELETE'){
         echo "deleting data";
         http_response_code(200);

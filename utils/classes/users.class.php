@@ -92,6 +92,26 @@
             }
         }
 
+        public function delete($json){
+            $_responses = new responses;
+            $data = json_decode($json, true);
+            if(!isset($data['userID'])){
+                return $_responses->error_400();
+            } else {
+                $this->userID = $data['userID'];
+                $resp = $this->deleteUser();
+                if($resp){
+                    $response = $_responses->response;
+                    $response["result"] = array(
+                        "userID" => $this->userID
+                    );
+                    return $response;
+                } else {
+                    return $_responses->error_500();
+                }
+            }
+        }
+
         private function insertUser(){
             $query = "INSERT INTO " . $this->table . "(nombre, apellido, usuario, contrasena, rol, correo, nro_cel) 
             VALUES 
@@ -111,6 +131,16 @@
 
             $resp = parent::nonQuery($query);
             if($resp >= 1){
+                return $resp;
+            } else {
+                return 0;
+            }
+        }
+
+        private function deleteUser(){
+            $query = "DELETE FROM " . $this->table . " WHERE id_usuario = '" . $this->userID . "'";
+            $resp = parent::nonQuery($query);
+            if ($resp >= 1){
                 return $resp;
             } else {
                 return 0;

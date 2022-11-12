@@ -37,34 +37,42 @@
             $_responses = new responses;
             $data = json_decode( $json, true);
 
-            if(isset($data['token'])){
-                
+            if(!isset($data['token'])){
+                return $_responses->error_401();
+            } else {
+                $this->token = $data['token'];
+                $arrayToken = $this->searchToken();
+                if($arrayToken){
+
+                } else {
+                    return $_responses->error_401("El token enviado no es válido o expiró");
+                }
             }
 
-            if(!isset($data['user']) ||  !isset($data['password']) || !isset($data['email']) || !isset($data['name']) || !isset($data['lastname']) || !isset($data['role'])){
-                return $_responses->error_400();
-            } else {
-                $this->name = $data['name'];
-                $this->lastname = $data['lastname'];
-                $this->user = $data['user'];
-                $this->password = parent::crypto($data['password']);
-                $this->role = $data['role'];
-                $this->email = $data['email'];
-                if(isset($data['phone'])){
-                    $this->phone = $data['phone'];
-                }
-                try {
-                    $resp = $this->insertUser();
-                    $answer = $_responses->response;
-                    $answer["result"] = array(
-                        "userId" => $resp
-                    );
-                    return $answer;
-                } catch (mysqli_sql_exception $e) {
-                    return $_responses->error_500();
-                }
-                
-            }
+            //if(!isset($data['user']) ||  !isset($data['password']) || !isset($data['email']) || !isset($data['name']) || !isset($data['lastname']) || !isset($data['role'])){
+            //    return $_responses->error_400();
+            //} else {
+            //    $this->name = $data['name'];
+            //    $this->lastname = $data['lastname'];
+            //    $this->user = $data['user'];
+            //    $this->password = parent::crypto($data['password']);
+            //    $this->role = $data['role'];
+            //    $this->email = $data['email'];
+            //    if(isset($data['phone'])){
+            //        $this->phone = $data['phone'];
+            //    }
+            //    try {
+            //        $resp = $this->insertUser();
+            //        $answer = $_responses->response;
+            //        $answer["result"] = array(
+            //            "userId" => $resp
+            //        );
+            //        return $answer;
+            //    } catch (mysqli_sql_exception $e) {
+            //        return $_responses->error_500();
+            //    }
+            //    
+            //}
         }
 
         public function put($json){
@@ -147,6 +155,27 @@
             $query = "DELETE FROM " . $this->table . " WHERE id_usuario = '" . $this->userID . "'";
             $resp = parent::nonQuery($query);
             if ($resp >= 1){
+                return $resp;
+            } else {
+                return 0;
+            }
+        }
+
+        private function searchToken(){
+            $query = "SELECT id_token, id_usuario, estado FROM tb_token_usuarios WHERE token = '" . $this->token . "' AND estado = 'Activo'";
+            $resp = parent::obtainData($query);
+            if($resp){
+                return $resp;
+            } else {
+                return 0;
+            }
+        }
+
+        private function updateToken($tokenID){
+            $data = date("Y:m:d m:i");
+            $query = "UPDATE tb_token_usuarios SET fecha = '$date' WHERE id_token = '$tokenID'";
+            $resp = parent::nonQuery($query);
+            if($resp >= 1){
                 return $resp;
             } else {
                 return 0;

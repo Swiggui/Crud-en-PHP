@@ -13,6 +13,7 @@
         private $lastname = "";
         private $email = "";
         private $phone = "";
+        private $token = "";
         
         public function listUsers($page){
             $start = 0;
@@ -35,6 +36,11 @@
         public function post($json){
             $_responses = new responses;
             $data = json_decode( $json, true);
+
+            if(isset($data['token'])){
+                
+            }
+
             if(!isset($data['user']) ||  !isset($data['password']) || !isset($data['email']) || !isset($data['name']) || !isset($data['lastname']) || !isset($data['role'])){
                 return $_responses->error_400();
             } else {

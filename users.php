@@ -38,12 +38,24 @@
         }else{
             http_response_code(200);   //Retorna un status 200 indicando que fué exitoso
         }
+
+        echo json_encode($resp);
         
     } else if($_SERVER['REQUEST_METHOD'] == 'PUT'){
         
         $postbody = file_get_contents("php://input");
 
         $dataArray = $_users->put($postbody);
+
+        header('Content-Type: application/json');//Indica el tipo de respuesta
+        if(isset($dataArray["result"]["error_id"])){ //Verifica si existe en dataArray un subArray llamado result y hay un error id
+            $responseCode = $dataArray["result"]["error_id"]; //Crea la variable con el error
+            http_response_code($responseCode); 
+        }else{
+            http_response_code(200);   //Retorna un status 200 indicando que fué exitoso
+        }
+
+        echo json_encode($dataArray);
         
         
     } else if($_SERVER['REQUEST_METHOD'] == 'DELETE'){

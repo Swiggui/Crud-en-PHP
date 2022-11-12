@@ -77,11 +77,15 @@
                 if(isset($data['phone'])){ $this->phone = $data['phone']; }
                 try {
                     $resp = $this->modifyUser();
-                    //$answer = $_responses->response;
-                    //$answer["result"] = array(
-                    //    "userId" => $resp
-                    //);
-                    //return $answer;
+                    if($resp){
+                        $answer = $_responses->response;
+                        $answer["result"] = array(
+                            "userId" => $this->userID
+                        );
+                        return $answer;
+                    } else {
+                        return $_responses->error_500();
+                    }
                 } catch (mysqli_sql_exception $e) {
                     return $_responses->error_500();
                 }
@@ -104,11 +108,9 @@
         
         private function modifyUser(){
             $query = "UPDATE " . $this->table . " SET nombre = '" . $this->name . "', apellido = '" . $this->lastname . "', usuario = '" . $this->user . "', contrasena = '" . $this->password . "', rol = '" . $this->role . "', correo = '" . $this->email . "', nro_cel = '" . $this->phone . "' WHERE id_usuario = '" . $this->userID . "'"; 
-            echo "\n";
-            print_r($query);
 
-            $resp = parent::nonQueryId($query);
-            if($resp){
+            $resp = parent::nonQuery($query);
+            if($resp >= 1){
                 return $resp;
             } else {
                 return 0;

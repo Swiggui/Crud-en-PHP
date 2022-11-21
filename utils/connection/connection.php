@@ -17,13 +17,14 @@ class connection {
             $this->database = $value['database'];
             $this->port = $value['port'];
         }
-        $this->connection = new mysqli($this->server, $this->user, $this->password, $this->database, $this->port);
-        if($this->connection->connect_error){
-            echo "Error de conexión en la base de datos";
+        try {
+            $this->connection = new mysqli($this->server, $this->user, $this->password, $this->database, $this->port);
+        } catch (\Throwable $th) {
+            echo "<h1>Error de conexión en la base de datos</h1>";
             die();
-        } else {
-            echo "Base de datos conectada correctamente";
         }
+        
+        
     }
     private function dataConnection(){
         $direction = dirname(__FILE__);

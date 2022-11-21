@@ -59,8 +59,20 @@
         
         
     } else if($_SERVER['REQUEST_METHOD'] == 'DELETE'){
-        
-        $postbody = file_get_contents("php://input");
+
+        $headers = getallheaders();
+        print_r($headers);
+        if(isset($headers["token"]) && isset($headers["userID"])){
+            //recibir datos por el header
+            $send = [
+                "token" => $headers["token"],
+                "userID" => $headers["userID"]
+            ];
+            $postbody = json_encode($send);
+            
+        } else {
+            $postbody=file_get_contents("php://input");
+        }
 
         $dataArray = $_users->delete($postbody);
         
